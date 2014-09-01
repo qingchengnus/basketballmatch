@@ -753,7 +753,7 @@ int main(int argc, char *argv[]){
 		after = wall_clock_time();
 		float time = ((float)(after - before))/1000000000;
 		
-		//printf("Time Used: %1.6f\n",time);
+		printf("Time Used: %1.6f\n",time);
     		return 0;
 	}
 	

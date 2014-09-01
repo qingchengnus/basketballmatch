@@ -52,6 +52,19 @@ int get_distance(point x, point y){
 	return abs(x.x - y.x) + abs(x.y - y.y);
 }
 
+long long wall_clock_time()
+{
+#ifdef __linux__
+	struct timespec tp;
+	clock_gettime(CLOCK_REALTIME, &tp);
+	return (long long)(tp.tv_nsec + (long long)tp.tv_sec * 1000000000ll);
+#else
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (long long)(tv.tv_usec * 1000 + (long long)tv.tv_sec * 1000000000ll);
+#endif
+}
+
 /*
 MAIN FUNCTION
 */
@@ -68,12 +81,15 @@ int main(int argc, char *argv[]){
 	player current_player;
 	int recv_buffer[64];
 	int send_buffer[64]; 
+	long long before, after;
 
+	
 	if (num_of_tasks != NUM_OF_PLAYERS + 1){//incorrect number of proccess, exit
-		printf("Incorrect number of proccesses. Correct number of proccesses: %d .\n", NUM_OF_PLAYERS + 1);
+		//printf("Incorrect number of proccesses. Correct number of proccesses: %d .\n", NUM_OF_PLAYERS + 1);
 		MPI_Finalize();
 		return 0;
 	} else {//correct number of proccesses
+		before = wall_clock_time();
 		for(current_round = 0; current_round < NUM_OF_ROUNDS; current_round ++){
 			if (current_round == 0)//do initializations in the first round
 			{
@@ -148,7 +164,7 @@ int main(int argc, char *argv[]){
 				//Gather the imformation: new ball position
 				if(win_player != -1){
 					MPI_Scatter(&send_buffer, 2, MPI_INT, &recv_buffer, 2, MPI_INT, win_player, MPI_COMM_WORLD);
-					printf("I have known the new position of  the ball\n");
+					//printf("I have known the new position of  the ball\n");
 					current_field.current_ball_position.x = recv_buffer[0];
 					current_field.current_ball_position.y = recv_buffer[1];
 				}
@@ -157,8 +173,8 @@ int main(int argc, char *argv[]){
 				MPI_Gather(&send_buffer, 7, MPI_INT, &recv_buffer, 7, MPI_INT, FIELD_PROCCESS, MPI_COMM_WORLD);
 				
 
-				printf("%d\n", current_round);
-				printf("%d %d\n", current_field.current_ball_position.x, current_field.current_ball_position.y);
+				//printf("%d\n", current_round);
+				//printf("%d %d\n", current_field.current_ball_position.x, current_field.current_ball_position.y);
 					int did_reach_ball;
 					int did_win_ball;
 				for(i = 1; i <= NUM_OF_PLAYERS; i ++){
@@ -170,7 +186,7 @@ int main(int argc, char *argv[]){
 					if(win_player == i + 1){
 						did_win_ball = 1;
 					}
-					printf("%d %d %d %d %d %d %d %d %d %d\n", i - 1, recv_buffer[i * 7], recv_buffer[i * 7 + 1], recv_buffer[i * 7 + 2], recv_buffer[i * 7 + 3], did_reach_ball, did_win_ball, recv_buffer[i * 7 + 4], recv_buffer[i * 7 + 5], recv_buffer[i * 7 + 6]);
+					//printf("%d %d %d %d %d %d %d %d %d %d\n", i - 1, recv_buffer[i * 7], recv_buffer[i * 7 + 1], recv_buffer[i * 7 + 2], recv_buffer[i * 7 + 3], did_reach_ball, did_win_ball, recv_buffer[i * 7 + 4], recv_buffer[i * 7 + 5], recv_buffer[i * 7 + 6]);
 				}
 
 
@@ -284,6 +300,10 @@ int main(int argc, char *argv[]){
 		}
 	}
 	MPI_Finalize();
+	after = wall_clock_time();
+	float time = ((float)(after - before))/1000000000;
+	
+	printf("Time Used: %1.6f\n",time);
  
-    	return 0;
+	return 0;
 }
