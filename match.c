@@ -507,19 +507,19 @@ int main(int argc, char *argv[]){
 					}
 					MPI_Scatter(&temp_send_buffer, 1, MPI_INT, &recv_buffer, 1, MPI_INT, FIELD_0_PROCCESS, MPI_COMM_WORLD);
 					//printing job
-					printf("%d\n",current_round);
-					printf("%d %d\n",current_field.team0_score, current_field.team1_score);
-					printf("%d %d\n", current_field.current_ball_position.x, current_field.current_ball_position.y);
+					//printf("%d\n",current_round);
+					//printf("%d %d\n",current_field.team0_score, current_field.team1_score);
+					//printf("%d %d\n", current_field.current_ball_position.x, current_field.current_ball_position.y);
 					
 
 					//update its knowledge of the players on itself
 					for(i = 0; i < NUM_OF_PLAYERS_PER_TEAM * 2; i ++){
 						if(send_buffer[i * 9] != -1){
-							printf("%d %d %d %d %d %d %d %d %d %d\n", i, send_buffer[i * 9], send_buffer[i * 9 + 1], send_buffer[i * 9 + 2], send_buffer[i * 9 + 3], send_buffer[i * 9 + 4], send_buffer[i * 9 + 5], send_buffer[i * 9 + 6], send_buffer[i * 9 + 7], send_buffer[i * 9 + 8]);
+							//printf("%d %d %d %d %d %d %d %d %d %d\n", i, send_buffer[i * 9], send_buffer[i * 9 + 1], send_buffer[i * 9 + 2], send_buffer[i * 9 + 3], send_buffer[i * 9 + 4], send_buffer[i * 9 + 5], send_buffer[i * 9 + 6], send_buffer[i * 9 + 7], send_buffer[i * 9 + 8]);
 							current_field.players_position[i].x = send_buffer[i * 9 + 2];
 							current_field.players_position[i].y = send_buffer[i * 9 + 3];
 						} else {
-							printf("%d %d %d %d %d %d %d %d %d %d\n", i, recv_buffer[i * 9], recv_buffer[i * 9 + 1], recv_buffer[i * 9 + 2], recv_buffer[i * 9 + 3], recv_buffer[i * 9 + 4], recv_buffer[i * 9 + 5], recv_buffer[i * 9 + 6], recv_buffer[i * 9 + 7], recv_buffer[i * 9 + 8]);
+							//printf("%d %d %d %d %d %d %d %d %d %d\n", i, recv_buffer[i * 9], recv_buffer[i * 9 + 1], recv_buffer[i * 9 + 2], recv_buffer[i * 9 + 3], recv_buffer[i * 9 + 4], recv_buffer[i * 9 + 5], recv_buffer[i * 9 + 6], recv_buffer[i * 9 + 7], recv_buffer[i * 9 + 8]);
 							current_field.players_position[i].x = -1;
 							current_field.players_position[i].y = -1;
 						}
