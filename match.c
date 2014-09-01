@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
-#include <xmmintrin.h>
 #include <assert.h>
 
 /*
